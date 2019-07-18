@@ -5,52 +5,9 @@ import numpy.random as rn
 
 from birkhoff import birkhoff_von_neumann_decomposition
 
-class PubblicationInfo:
-    def __init__(self, sum_score: float, occurences, positions):
-        self.sum_score = sum_score
-        self.occurences = occurences
-        self.positions = positions
-
-    def increaseValue(self, score: float, position):
-        self.sum_score += score
-        self.occurences += 1
-        self.positions.append(position)
-    
-    def getOccurrences(self):
-        return self.occurences
-
-    def getPositions(self):
-        return self.positions
-
-    def getScore(self):
-        return self.sum_score
-
-    def __repr__(self):
-        return str(self.__dict__)
-
-
 def fairnessMethod(hits=[], type=1):
-    scores = []
-    publications = {}
-    current_score = 0
-    max_score = hits[0]['_score']
-    for hit,i in zip(hits, range(len(hits))):
-        score = hit['_score']/max_score
-        scores.append(score)
-        publication = hit['_source']['publication']
-        if publication in publications:
-            info = publications.get(publication)
-            info.increaseValue(score,i)
-        else:
-            publications[publication] = PubblicationInfo(score,1,[i])
 
-
-
-    u = np.array(scores)
-    norm = np.around(u, decimals=2)
-    print(norm)
-
-    p_matrix = fp.findProbMatrix(norm, publications, type)
+    p_matrix = fp.findProbMatrix(hits, type)
 
     print("MATRICE PROBABILITA %s" % p_matrix)
 

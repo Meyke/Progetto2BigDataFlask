@@ -8,34 +8,53 @@ from sinkhorn_knopp import sinkhorn_knopp as skp
 #ATTENZIONE, PARAMETRIZZARE I GRUPPI. QUI FA :3, PERCHè HO DUE GRUPPI DA 3 (I PRIMI 3 E GLI ULTIMI 3)
 
 
-def findProbMatrix(u, pubblications,type):
+def findProbMatrix(hits,type):
+
+    scores = []
+    publications = {}
+    current_score = 0
+    max_score = hits[0]['_score']
+    for hit,i in zip(hits, range(len(hits))):
+        score = hit['_score']/max_score
+        scores.append(score)
+        publication = hit['_source']['publication']
+        if publication in publications:
+            info = publications.get(publication)
+            info.increaseValue(score,i)
+        else:
+            publications[publication] = PublicationInfo(score,1,[i])
+
+    norm = np.array(scores)
+    u = np.around(norm, decimals=2)
+    print(u)
+
     v = np.array([1.0/(np.log(2 + i)) for i, _, in enumerate(u)])
     P = cp.Variable((len(u), len(u)))
     objective = cp.Maximize(cp.matmul(cp.matmul(u, P), v))
     constraints = [cp.matmul(np.ones((1,len(u))), P) == np.ones((1,len(u))),
                    cp.matmul(P, np.ones((len(u),))) == np.ones((len(u),)),
                    0 <= P, P <= 1]
-    
-    list_pubblications = list(pubblications.keys())
-    for pubblication in list_pubblications:
-        list_pubblications.remove(pubblication)
-        occurrences = pubblications.get(pubblication).getOccurrences()
-        positions1 = pubblications.get(pubblication).getPositions()
-        for second_pubblication in list_pubblications:
+
+    list_publications = list(publications.keys())
+    for publication in list_publications:
+        list_publications.remove(publication)
+        occurrences = publications.get(publication).getOccurrences()
+        positions1 = publications.get(publication).getPositions()
+        for second_publication in list_publications:
             values = []
             positions = []
             for i in range(occurrences):
                 if type == 1:
                     values.append(1/occurrences)
                 else:
-                    values.append(1/round(pubblications.get(pubblication).getScore(),0))
-            second_occurrences = pubblications.get(second_pubblication).getOccurrences()
-            positions2 = pubblications.get(second_pubblication).getPositions()
+                    values.append(1/round(publications.get(publication).getScore(),0))
+            second_occurrences = publications.get(second_publication).getOccurrences()
+            positions2 = publications.get(second_publication).getPositions()
             for j in range(second_occurrences):
                 if type == 1:
                     values.append(-1/second_occurrences)
                 else:
-                    values.append(-1/round(pubblications.get(second_pubblication).getScore(),0))
+                    values.append(-1/round(publications.get(second_publication).getScore(),0))
             positions = positions1 + positions2
             print(values)
             positions.sort()
@@ -66,5 +85,28 @@ def findProbMatrix(u, pubblications,type):
     print(np.sum(p_matrix, axis=0))
     print(np.sum(p_matrix, axis=1))
     print('\n %s' % p_matrix)
-    return p_matrix
+    return p_matrix        
+
+class PublicationInfo:
+    def __init__(self, sum_score: float, occurences, positions):
+        self.sum_score = sum_score
+        self.occurences = occurences
+        self.positions = positions
+
+    def increaseValue(self, score: float, position):
+        self.sum_score += score
+        self.occurences += 1
+        self.positions.append(position)
+    
+    def getOccurrences(self):
+        return self.occurences
+
+    def getPositions(self):
+        return self.positions
+
+    def getScore(self):
+        return self.sum_score
+
+    def __repr__(self):
+        return str(self.__dict__)
 
