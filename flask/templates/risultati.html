@@ -1,5 +1,8 @@
 {% extends "mylayout.html" %}
 {% block content %}
+<p>
+	La DCG è {{dcg}}
+</p>
 {% for hit in hits %}
     <div class="search-result">
         <h3><a href="#">{{ hit._source.title }}</a></h3>
