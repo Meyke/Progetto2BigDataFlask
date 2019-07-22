@@ -21,7 +21,7 @@ def search():
     keyword = request.form['ricerca']  # ho una form così chiamata in risultati.html
 
     body = {
-        "from":0,"size":10,
+        "from":0,"size":6,
         "query": {
             "multi_match": {
                 "query": keyword,

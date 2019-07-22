@@ -43,22 +43,28 @@ def findProbMatrix(hits,type):
         for second_publication in list_publications:
             values = []
             positions = []
-            for i in range(occurrences):
+            for i in positions1:
                 if type == 1:
                     values.append(1/occurrences)
-                else:
+                elif type == 2:
                     values.append(1/round(publications.get(publication).getScore(),0))
+                else:
+                    values.append(scores[i]/round(publications.get(publication).getScore(),0))
             second_occurrences = publications.get(second_publication).getOccurrences()
             positions2 = publications.get(second_publication).getPositions()
-            for j in range(second_occurrences):
+            for j in positions2:
                 if type == 1:
                     values.append(-1/second_occurrences)
-                else:
+                elif type == 2:
                     values.append(-1/round(publications.get(second_publication).getScore(),0))
+                else:
+                    values.append(-scores[j]/round(publications.get(second_publication).getScore(),0))
             positions = positions1 + positions2
             print(values)
             positions.sort()
             constraints.append(cp.matmul(cp.matmul(np.array(values), P[positions]), v) == 0)
+
+
 
 
     prob = cp.Problem(objective, constraints)
