@@ -49,7 +49,7 @@ def findProbMatrix(hits,type):
                 elif type == 2:
                     values.append(1/round(publications.get(publication).getScore(),0))
                 else:
-                    values.append(scores[i]/round(publications.get(publication).getScore(),0))
+                    values.append(round(scores[i],0)/round(publications.get(publication).getScore(),0))
             second_occurrences = publications.get(second_publication).getOccurrences()
             positions2 = publications.get(second_publication).getPositions()
             for j in positions2:
@@ -58,7 +58,7 @@ def findProbMatrix(hits,type):
                 elif type == 2:
                     values.append(-1/round(publications.get(second_publication).getScore(),0))
                 else:
-                    values.append(-scores[j]/round(publications.get(second_publication).getScore(),0))
+                    values.append(-round(scores[j],0)/round(publications.get(second_publication).getScore(),0))
             positions = positions1 + positions2
             print(values)
             positions.sort()

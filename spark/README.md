@@ -30,3 +30,7 @@ docker start -i face_rec_cont
 ```
 
 **ATTENZIONE**: se eliminiamo un contenitore, viene eliminato anche il suo contenuto. Questo può essere evitato montando un VOLUME linkato con qualche cartella del proprio host. Si guardi la documentazione di docker.
+
+### Altro
+
+Il file articles_1.csv contiene solo un sottoinsieme dell'intero dataset...per utilizzare l'intero dataset scaricarlo da https://www.kaggle.com/snapcrack/all-the-news, unire i 3 csv in un file solo e sostituirlo al csv presente con lo stesso nome

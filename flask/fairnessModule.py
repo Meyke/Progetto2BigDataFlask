@@ -1,4 +1,3 @@
-
 import findProbMatrix as fp
 import numpy as np
 import numpy.random as rn
@@ -25,7 +24,6 @@ def fairnessMethod(hits=[], type=1):
     ranking = matrices[index]
     ranking_indexes = np.where(ranking)[1]
     return reorder(hits, ranking_indexes, len(hits))
-
 
 # Function to reorder elements of arr[] according 
 # to index[] 

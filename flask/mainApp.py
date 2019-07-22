@@ -41,7 +41,7 @@ def search():
     if request.form.get('Disparate Impact'):
         hits = fairnessMethod(hits,3)
 
-    dcg = calc_dcg(hits)
+    dcg = round(calc_dcg(hits),2)
 
 
     return render_template("risultati.html", hits=hits, dcg=dcg)
