@@ -1,6 +1,8 @@
 # ProgettoBigData2
 Progetto per il corso di BigData
 
+Il pdf è il report del progetto
+
 
 ## Creazione della rete (solo dopo aver avviato il contenitore con elasticsearch...andare nelle directory di interesse per avviarlo)
 
